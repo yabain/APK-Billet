@@ -1,0 +1,7 @@
+{
+  "name": "Ya-Bi",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
