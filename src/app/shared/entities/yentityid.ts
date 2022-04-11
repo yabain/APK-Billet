@@ -9,7 +9,7 @@ export class YEntityID
      * @description cette methode permet de générer un identifiant unique a 16 caractéres
      * @return une chaine de carractére de 16 éléments 
      */
-    private generateId():String
+    generateId():String
     {
         var timestamp = (new Date().getTime() / 1000 | 0).toString(16);
         return timestamp + 'xxxxxxxxxxxxxxxx'.replace(/[x]/g, function() {

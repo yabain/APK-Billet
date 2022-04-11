@@ -1,8 +1,12 @@
+import { YString } from "../utils/helpers";
 import { YEntityID } from "./yentityid";
+
 
 export class YEntity
 {
-    public id:YEntityID=new YEntityID();
+    id:YEntityID=new YEntityID();
+    createdDate:String=(new Date()).toISOString();
+
     hydrate(entity: Record<string | number,any>):void
     {
         for(const key of Object.keys(entity))
@@ -10,6 +14,12 @@ export class YEntity
             if(Reflect.has(this,key))
             {
                 if( (this[key] instanceof YEntity) || (this[key] instanceof YEntityID) ) this[key].hydrate(entity[key])
+                else if(this[key] instanceof Array)
+                {
+                    let functionName=`hydrate${YString.capitalize(key)}List`;
+                    if(typeof this[functionName]=="function") this[functionName](entity[key])
+                    else Reflect.set(this,key,entity[key]);
+                }
                 else Reflect.set(this,key,entity[key]);
             }
         }
@@ -21,6 +31,13 @@ export class YEntity
         for(const k of Object.keys(this))
         {
             if( (this[k] instanceof YEntity) || (this[k] instanceof YEntityID) ) r[k]=this[k].toString();
+            else if(this[k] instanceof Array)
+            {
+                r[k]=this[k].map((entity)=>{
+                    if( (entity instanceof YEntity) || (entity instanceof YEntityID) ) return entity.toString()
+                    return entity
+                })
+            }
             else r[k]=Reflect.get(this,k);
         }
         return r;
