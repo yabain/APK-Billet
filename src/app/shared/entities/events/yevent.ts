@@ -18,7 +18,7 @@ export class YEvent extends YEntity
     ownerID:YEntityID=new YEntityID();
     organizerListID:YEntityID[]=[];
     type:YEventType=YEventType.SHOWBIZZ;
-    place:YEventPlace=new YEventPlace();
+    place:YEntityID=new YEntityID();
     subType:YEventSubType=YEventSubType.SHOWBIZZ_CONCERT;
 
     hydrateOwnerIDList(entityList)
