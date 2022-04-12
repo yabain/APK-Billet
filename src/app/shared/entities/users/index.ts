@@ -6,7 +6,7 @@ import { YUser } from "./yuser";
 import { YUserPreferences } from "./yuserprefrences";
 
 
-export default {
+export {
     YUser,
     YPlateformAdmin,
     YParticipant,
