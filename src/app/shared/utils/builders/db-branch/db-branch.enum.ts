@@ -11,5 +11,6 @@ export enum DbBranch
     events="events",
     event_details="details",
     organizers="organizers",
-    places="places"
+    places="places",
+    artistes="artistes"
 }

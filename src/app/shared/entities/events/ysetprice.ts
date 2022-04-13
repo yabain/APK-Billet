@@ -1,4 +1,4 @@
-import { YMoneyCode } from "../../enums/money.enum";
+import { YMoneyCode, YSetPriceType } from "../../enums";
 import { YEntity } from "../yentity";
 
 export class YSetPrice extends YEntity
@@ -7,4 +7,5 @@ export class YSetPrice extends YEntity
     label:String="";
     description:String="";
     moneyCode:YMoneyCode=YMoneyCode.XAF;
+    type:YSetPriceType=YSetPriceType.NORMAL;
 }

@@ -15,6 +15,7 @@ export class YEvent extends YEntity
     imgUrl:String="";
     uniqueCode:YUniqueCode=new YUniqueCode();
     prices:YSetPrice[]=[];
+    artisteID:YEntityID[]=[];
     ownerID:YEntityID=new YEntityID();
     organizerListID:YEntityID[]=[];
     type:YEventType=YEventType.SHOWBIZZ;
@@ -23,7 +24,7 @@ export class YEvent extends YEntity
 
     hydrateOwnerIDList(entityList)
     {
-        entityList.map((entity)=>{
+        return entityList.map((entity)=>{
             let newOwnerID = new YEntityID();
             newOwnerID.setId(entity);
             return newOwnerID;
@@ -32,10 +33,18 @@ export class YEvent extends YEntity
 
     hydratePricesList(entityList)
     {
-        entityList.map((entity)=>{
+        return entityList.map((entity)=>{
             let price = new YSetPrice();
             price.hydrate(entity);
             return price;
+        })
+    }
+    hydrateArtisteID(entityList): void
+    {
+        return entityList.map((id)=>{
+            let idE=new YEntityID();
+            idE.setId(id);
+            return idE;
         })
     }
 }

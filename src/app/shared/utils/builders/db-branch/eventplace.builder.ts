@@ -1,12 +1,12 @@
 import { YEntityID } from "src/app/shared/entities";
 import { DbBranch } from "./db-branch.enum";
 
-export function getBranchOfPlaces():string
+export function getBranchOfEventPlaces():string
 {
     return `${DbBranch.places}`
 }
 
-export function getBranchOfPlace(placeID:YEntityID):string
+export function getBranchOfEventPlace(placeID:YEntityID):string
 {
-    return `${getBranchOfPlaces()}/${placeID.toString()}`
+    return `${getBranchOfEventPlaces()}/${placeID.toString()}`
 }

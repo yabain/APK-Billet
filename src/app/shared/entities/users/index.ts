@@ -1,3 +1,4 @@
+import { YArtiste } from "./yartiste";
 import { YEventManager } from "./yeventmanager";
 import { YOrganizer } from "./yorganizer";
 import { YParticipant } from "./yparticipant";
@@ -12,5 +13,6 @@ export {
     YParticipant,
     YOrganizer,
     YEventManager,
-    YUserPreferences
+    YUserPreferences,
+    YArtiste
 }

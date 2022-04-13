@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { YEventInvitationStoreService } from './yevent-invitation-store.service';
+import { YEventNotificationStoreService } from './yevent-notification-store.service';
 
 describe('YEventInvitationStoreService', () => {
-  let service: YEventInvitationStoreService;
+  let service: YEventNotificationStoreService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(YEventInvitationStoreService);
+    service = TestBed.inject(YEventNotificationStoreService);
   });
 
   it('should be created', () => {
