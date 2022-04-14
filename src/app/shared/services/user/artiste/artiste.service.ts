@@ -13,9 +13,10 @@ export class ArtisteService extends YAbstractEntityStoreService<YArtiste> {
   ) { 
     super(firebaseApi)
   }
+  
 
   createInstance(entity: Record<string, any>): YArtiste {
     return new YArtiste()
   }
-  
+
 }

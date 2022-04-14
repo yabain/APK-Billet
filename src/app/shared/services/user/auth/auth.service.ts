@@ -17,7 +17,7 @@ export class AuthService {
 
   constructor(
     private eventService: EventService,
-    private firebaseApi:FirebaseDataBaseApi
+    public firebaseApi:FirebaseDataBaseApi
   ) {
     // this.localStorageService.getSubjectByKey("auth_data").subscribe((userData:any) => {
     //   console.log("userData",userData)

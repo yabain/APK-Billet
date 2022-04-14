@@ -47,7 +47,6 @@ export class UserProfilService {
     }
     getCurrentUserProfil(userID:YEntityID):Promise<ActionStatus<YUser>>
     {
-      console.log("iduserauth",userID)
       return new Promise<ActionStatus<YUser>>((resolve,reject)=>{
         this.userService.getUserById(userID)
         .then((result:ActionStatus<YUser>)=>{

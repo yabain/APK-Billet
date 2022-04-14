@@ -28,7 +28,7 @@ export class YUserStoreService extends YAbstractEntityStoreService<YUser> {
   
   addUser(user: YUser): Promise<ActionStatus<void>>
   {
-   return this.save(user,DbBranchUser.getBranchOfUser(user.id))
+   return this.save(user,DbBranchUser.getBranchOfUserProfil(user.id))
   }
 
   getAllUser():Promise<ActionStatus<YUser>>
@@ -52,8 +52,7 @@ export class YUserStoreService extends YAbstractEntityStoreService<YUser> {
   createNewAccount(user:YUser):Promise<ActionStatus<void>>
   {
     return new Promise<ActionStatus<any>>((resolve,reject)=>{
-      this.authService.createAccount(user)
-      .then((result:ActionStatus<YUser>)=>this.addUser(result.result))
+      this.addUser(user)
       .then((result:ActionStatus<void>)=>resolve(result))
       .catch((error)=>{
         this.firebaseApi.handleApiError(error);

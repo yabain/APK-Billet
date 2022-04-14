@@ -24,7 +24,6 @@ export class LoginService {
       this.authService.authLogin(user)
       .then((result:ActionStatus<YEntityID>)=> this.userProfil.getCurrentUserProfil(result.result))
       .then((result:ActionStatus<boolean>)=>{
-        console.log("endlogine ",result.result)
         this.eventService.loginEvent.next(true);
         resolve(result);
       })
