@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
+import { AppPreferencesOriginal } from '@awesome-cordova-plugins/app-preferences';
 import { BehaviorSubject } from 'rxjs';
 import { YLanguageCode, YMoneyCode } from 'src/app/shared/enums';
 import { ActionStatus } from 'src/app/shared/utils';
 import { DbBranchUser } from 'src/app/shared/utils/builders/db-branch';
+import { DeviceService } from 'src/app/shared/utils/services/device/device.service';
 import { FirebaseDataBaseApi } from 'src/app/shared/utils/services/firebase';
 import { UserProfilService } from '../user-profil/user-profil.service';
+
 
 @Injectable({
   providedIn: 'root'
@@ -12,10 +15,14 @@ import { UserProfilService } from '../user-profil/user-profil.service';
 export class UserPreferenceService {
   moneyCode:BehaviorSubject<YMoneyCode>=new BehaviorSubject<YMoneyCode>(YMoneyCode.XAF);
   langCode:BehaviorSubject<YLanguageCode>=new BehaviorSubject<YLanguageCode>(YLanguageCode.FR);
-
+  private deviceDict="yabi-dict-preferences";
+  private deviceDictLang="yabi-pref-lang";
+  private deviceDictMoney="yabi-pref-money";
   constructor(
     private firebaseApi:FirebaseDataBaseApi,
-    private userProfileService:UserProfilService
+    private userProfileService:UserProfilService,
+    private deviceService:DeviceService,
+    private devicePreferences:AppPreferencesOriginal
   ) { }
   
   //set preference to objet and emmit to app
@@ -29,28 +36,36 @@ export class UserPreferenceService {
   downloadPreferences():Promise<ActionStatus<void>>
   {
     return new Promise<ActionStatus<void>>((resolve,reject)=>{
-        this.firebaseApi.set(
-          DbBranchUser.getBranchOfPreferenceUser(this.userProfileService.currentUser.getValue().id),
-          {
-            moneyCode:this.moneyCode,
-            langCode:this.langCode
-          }
-        )
-        .then((result)=> resolve(new ActionStatus()))
-        .catch((error)=>{
-          this.firebaseApi.handleApiError(error);
-          reject(error);
-        })
+       this.firebaseApi.fetch(DbBranchUser.getBranchOfPreferenceUser(this.userProfileService.currentUser.getValue().id))
+       .then((value)=>{
+          this.setPreferences(value.result.langCode,value.result.moneyCode) 
+          return this.setPreferencesToDevice(value.result.langCode,value.result.moneyCode);
+       })
+       .then((result)=> resolve(result))
+       .catch((error)=>{
+         this.firebaseApi.handleApiError(error);
+         reject(error)
+       })
     })
   }
 
   //read all preferences from default value of device
   initPreference():Promise<ActionStatus<void>>
   {
+    let lang:YLanguageCode;
     return new Promise<ActionStatus<void>>((resolve,reject)=>{
       this.readDefaultLangFromDevice()
-      this.readDefaultMoneyFromDevice()
-      this.updatePreferences(this.langCode.getValue(),this.moneyCode.getValue())
+      .then((result)=>{
+        lang=result.result;
+        return this.readDefaultMoneyFromDevice()
+      })
+      .then((result)=>{
+        this.setPreferences(lang,result.result)
+        return this.setPreferencesToDevice(lang,result.result)
+      })
+      .then((result)=>this.updatePreferences(this.langCode.getValue(),this.moneyCode.getValue()))
+      .then((result)=> resolve(result))
+      .catch((error)=>reject(error))    
     })
   }
 
@@ -58,7 +73,21 @@ export class UserPreferenceService {
   updatePreferences(langCode:YLanguageCode,moneyCode:YMoneyCode):Promise<ActionStatus<void>>
   {
     return new Promise<ActionStatus<void>>((resolve,reject)=>{
-      this.setPreferencesToDevice(langCode,moneyCode);
+      this.firebaseApi.set(
+        DbBranchUser.getBranchOfPreferenceUser(this.userProfileService.currentUser.getValue().id),
+        {
+          moneyCode:this.moneyCode,
+          langCode:this.langCode
+        }
+      )
+      .then((result)=> {
+        this.setPreferencesToDevice(langCode,moneyCode);
+        resolve(new ActionStatus())
+      })
+      .catch((error)=>{
+        this.firebaseApi.handleApiError(error);
+        reject(error);
+      })
     })
   }
 
@@ -75,19 +104,32 @@ export class UserPreferenceService {
   }
 
   //set 
-  private setLangToDevice(langCode:YLanguageCode)
+  private setLangToDevice(langCode:YLanguageCode):Promise<ActionStatus<void>>
   {
-    return this.setPreferencesToDevice(langCode,this.moneyCode.getValue());
+    return new Promise<ActionStatus<void>>((resolve,reject)=>{
+      this.devicePreferences.store(this.deviceDict,this.deviceDictLang,langCode)
+      .then((result)=>{
+        resolve(new ActionStatus())
+      })
+      .catch((error)=>reject(new ActionStatus()))
+    })
+    
   }
 
-  private setMoneyToDevice(moneCode:YMoneyCode)
+  private setMoneyToDevice(moneCode:YMoneyCode):Promise<ActionStatus<void>>
   {
-    return this.setPreferencesToDevice(this.langCode.getValue(),moneCode)
+    return new Promise<ActionStatus<void>>((resolve,reject)=>{
+      this.devicePreferences.store(this.deviceDict,this.deviceDictMoney,moneCode)
+      .then((result)=>{
+        resolve(new ActionStatus())
+      })
+      .catch((error)=>reject(new ActionStatus()))
+    })
   }
 
   private setPreferencesToDevice(langCode:YLanguageCode,moneyCode:YMoneyCode)
   {
-
+    return this.setLangToDevice(langCode).then((value)=>this.setMoneyToDevice(moneyCode));
   }
 
   getPreferencesFromDevice()
@@ -95,14 +137,14 @@ export class UserPreferenceService {
 
   }
 
-  readDefaultLangFromDevice()
+  readDefaultLangFromDevice():Promise<ActionStatus<YLanguageCode>>
   {
-
+    return this.deviceService.getLanguageCode()
   }
 
   readDefaultMoneyFromDevice()
   {
-
+    return this.deviceService.getCurrencyCode()
   }
 
 }

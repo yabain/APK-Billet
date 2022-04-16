@@ -1,0 +1,6 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "Ya-Bi",
+	"webDir": "www",
+	"bundledWebRuntime": false
+}
