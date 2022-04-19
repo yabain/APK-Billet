@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { UserPreferenceService } from 'src/app/shared/services/user/user-preference/user-preference.service';
 
 @Component({
   selector: 'app-login',
@@ -8,7 +9,11 @@ import { Component, OnInit } from '@angular/core';
 export class LoginComponent implements OnInit {
   login = { username: '', password: '' };
   submitted = false;
-  constructor() { }
+  constructor(
+    private preferencesService:UserPreferenceService
+  ) { 
+    preferencesService.getPreferencesFromDevice()
+  }
 
   ngOnInit() {}
 

@@ -4,7 +4,8 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { YEntityID } from 'src/app/shared/entities';
 import { YUser } from 'src/app/shared/entities/users';
 import { ActionStatus } from 'src/app/shared/utils';
-import { EventService } from 'src/app/shared/utils/services/events/event.service';
+import { EventEmitterService } from 'src/app/shared/utils/services/event-emitter/event-emitter.service';
+import { FireBaseAuth, FirebaseError } from 'src/app/shared/utils/services/firebase';
 import { FirebaseDataBaseApi } from '../../../utils/services/firebase/FirebaseDatabaseApi';
 // import { LocalStorageService } from '../localstorage/localstorage.service';
 
@@ -16,8 +17,9 @@ export class AuthService {
   isLoggedIn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   constructor(
-    private eventService: EventService,
-    public firebaseApi:FirebaseDataBaseApi
+    private eventService: EventEmitterService,
+    public firebaseApi:FirebaseDataBaseApi,
+    public firebaseAuth:FireBaseAuth
   ) {
     // this.localStorageService.getSubjectByKey("auth_data").subscribe((userData:any) => {
     //   console.log("userData",userData)
@@ -44,15 +46,14 @@ export class AuthService {
  
   createAccount(user: YUser): Promise<ActionStatus<YUser>> {
     return new Promise((resolve, reject) => {
-      this.firebaseApi.createUserApi(user.email.toString(),user.password.toString())
+      this.firebaseAuth.createUserApi(user.email.toString(),user.password.toString())
       .then((result: ActionStatus<any>)=>{
-        user.createdDate=(new Date()).toISOString()
         user.id.setId(result.result.uid);
         result.result=user;
         resolve(result)
       })
       .catch((e: ActionStatus<any>)=>{
-        this.firebaseApi.handleApiError(e)
+        FirebaseError.handleApiError(e)
         reject(e)
       })
     });
@@ -62,7 +63,7 @@ export class AuthService {
   // Login into your account
   authLogin(user:YUser): Promise<ActionStatus<YEntityID>> {
     return new Promise((resolve, reject) => {
-      this.firebaseApi.signInApi(user.email.toString(),user.password.toString())
+      this.firebaseAuth.signInApi(user.email.toString(),user.password.toString())
       .then((result: ActionStatus<any>) => {
         let userID: YEntityID=new YEntityID();
         userID.setId(result.result.user.uid)
@@ -71,7 +72,7 @@ export class AuthService {
         resolve(result);
       })
       .catch((error: ActionStatus<any>) => {
-        this.firebaseApi.handleApiError(error)
+        FirebaseError.handleApiError(error)
         reject(error);
       })
     });

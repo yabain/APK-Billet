@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { AppPreferencesOriginal } from '@awesome-cordova-plugins/app-preferences';
+import { AppPreferences } from '@awesome-cordova-plugins/app-preferences';
 import { BehaviorSubject } from 'rxjs';
 import { YLanguageCode, YMoneyCode } from 'src/app/shared/enums';
 import { ActionStatus } from 'src/app/shared/utils';
 import { DbBranchUser } from 'src/app/shared/utils/builders/db-branch';
 import { DeviceService } from 'src/app/shared/utils/services/device/device.service';
-import { FirebaseDataBaseApi } from 'src/app/shared/utils/services/firebase';
+import { FirebaseDataBaseApi, FirebaseError } from 'src/app/shared/utils/services/firebase';
 import { UserProfilService } from '../user-profil/user-profil.service';
 
 
@@ -22,7 +22,7 @@ export class UserPreferenceService {
     private firebaseApi:FirebaseDataBaseApi,
     private userProfileService:UserProfilService,
     private deviceService:DeviceService,
-    private devicePreferences:AppPreferencesOriginal
+    private devicePreferences:typeof AppPreferences
   ) { }
   
   //set preference to objet and emmit to app
@@ -43,7 +43,7 @@ export class UserPreferenceService {
        })
        .then((result)=> resolve(result))
        .catch((error)=>{
-         this.firebaseApi.handleApiError(error);
+         FirebaseError.handleApiError(error);
          reject(error)
        })
     })
@@ -85,7 +85,7 @@ export class UserPreferenceService {
         resolve(new ActionStatus())
       })
       .catch((error)=>{
-        this.firebaseApi.handleApiError(error);
+        FirebaseError.handleApiError(error);
         reject(error);
       })
     })
@@ -134,7 +134,10 @@ export class UserPreferenceService {
 
   getPreferencesFromDevice()
   {
-
+    return this.readDefaultLangFromDevice()
+    .then((result)=>{
+      this.readDefaultMoneyFromDevice()
+    })
   }
 
   readDefaultLangFromDevice():Promise<ActionStatus<YLanguageCode>>

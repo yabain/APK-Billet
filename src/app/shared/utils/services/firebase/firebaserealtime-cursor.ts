@@ -1,6 +1,6 @@
 import { ActionStatus } from "../../actionstatus";
 
-export class FirebaseCursor {
+export class FirebaseRealTimeCursor {
     baseRef:any;
     lastKey:any;
     lastValue:any;

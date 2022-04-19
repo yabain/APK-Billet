@@ -3,7 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import { YEntityID } from 'src/app/shared/entities';
 import { YUser } from 'src/app/shared/entities/users';
 import { ActionStatus } from 'src/app/shared/utils';
-import { EventService } from 'src/app/shared/utils/services/events/event.service';
+import { EventEmitterService } from 'src/app/shared/utils/services/event-emitter/event-emitter.service';
 import { YUserStoreService } from '../../store/yuser/yuser-store.service';
 
 
@@ -17,7 +17,7 @@ export class UserProfilService {
   constructor(
     // private localStorageService:LocalStorageService,
     private userService:YUserStoreService,
-    private eventService:EventService
+    private eventService:EventEmitterService
     ) {
 
     // this.localStorageService.getSubjectByKey("user_profil").subscribe((userObj:any)=>{

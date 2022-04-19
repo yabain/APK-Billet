@@ -1,6 +1,7 @@
-import { Entity } from "./entity";
+import { YEntity } from "../../entities/yentity";
 
-export class CustomFile extends Entity
+
+export class CustomFile extends YEntity
 {
     name:string="";
     lastModified:string="";

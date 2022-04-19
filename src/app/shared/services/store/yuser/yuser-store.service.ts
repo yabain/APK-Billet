@@ -4,7 +4,7 @@ import { YUser } from 'src/app/shared/entities/users/yuser';
 import { ActionStatus } from 'src/app/shared/utils';
 import { DbBranchUser } from 'src/app/shared/utils/builders/db-branch';
 import { YUserFactory } from 'src/app/shared/utils/factories';
-import { FirebaseDataBaseApi } from 'src/app/shared/utils/services/firebase';
+import { FirebaseDataBaseApi, FirebaseError } from 'src/app/shared/utils/services/firebase';
 import { AuthService } from '../../user/auth/auth.service';
 import { YAbstractEntityStoreService } from '../yabastractentity/yabstract-entity-store-service.service';
 
@@ -55,7 +55,7 @@ export class YUserStoreService extends YAbstractEntityStoreService<YUser> {
       this.addUser(user)
       .then((result:ActionStatus<void>)=>resolve(result))
       .catch((error)=>{
-        this.firebaseApi.handleApiError(error);
+        FirebaseError.handleApiError(error);
         reject(error)
       })
     })

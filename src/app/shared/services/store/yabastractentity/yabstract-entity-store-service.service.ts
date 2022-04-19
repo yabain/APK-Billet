@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { YEntity, YEntityID } from 'src/app/shared/entities';
 import { ActionStatus } from 'src/app/shared/utils';
-import { FirebaseDataBaseApi } from 'src/app/shared/utils/services/firebase';
+import { FirebaseDataBaseApi, FirebaseError } from 'src/app/shared/utils/services/firebase';
 
 @Injectable({
   providedIn: 'root'
@@ -49,7 +49,7 @@ export abstract class YAbstractEntityStoreService<T extends YEntity> {
             this.addObject(object);
             resolve(new ActionStatus());
         }).catch((error) => {
-        this.firebaseApi.handleApiError(error);
+        FirebaseError.handleApiError(error);
         reject(error);
         });
     });
@@ -73,7 +73,7 @@ export abstract class YAbstractEntityStoreService<T extends YEntity> {
             resolve(result)
         })
         .catch((error: ActionStatus<T>) => {
-          this.firebaseApi.handleApiError(error);
+          FirebaseError.handleApiError(error);
           reject(error);
         });
     });
@@ -86,7 +86,7 @@ export abstract class YAbstractEntityStoreService<T extends YEntity> {
               resolve(result)
           })
           .catch((error: ActionStatus<T>) => {
-            this.firebaseApi.handleApiError(error);
+            FirebaseError.handleApiError(error);
             reject(error);
           });
       });
@@ -147,7 +147,7 @@ export abstract class YAbstractEntityStoreService<T extends YEntity> {
   findByKey(key:String,value:String,branch):Promise<ActionStatus<T[]>>
   {
     return new Promise<ActionStatus<T[]>>((resolve,reject)=>{
-      this.firebaseApi.getFirebaseDatabase()
+      this.firebaseApi.getFirebaseApp()
       .ref(branch)
       .orderByChild(key)
       .equalTo(value)

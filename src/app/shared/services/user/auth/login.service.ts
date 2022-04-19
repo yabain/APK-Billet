@@ -4,8 +4,8 @@ import { ActionStatus } from '../../../utils';
 import { YUser } from '../../../entities/users';
 import { YEntityID } from '../../../entities';
 import { UserProfilService } from '../user-profil/user-profil.service';
-import { EventService } from 'src/app/shared/utils/services/events/event.service';
 import { UserPreferenceService } from '../user-preference/user-preference.service';
+import { EventEmitterService } from 'src/app/shared/utils/services/event-emitter/event-emitter.service';
 
 
 @Injectable({
@@ -17,7 +17,7 @@ export class LoginService {
     private authService:AuthService,
     private userProfil:UserProfilService,
     private userPreferenceService:UserPreferenceService,
-    private eventService:EventService,
+    private eventService:EventEmitterService,
   ) { }
 
   loginUser(user:YUser):Promise<ActionStatus<boolean>>

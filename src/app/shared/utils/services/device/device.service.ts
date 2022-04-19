@@ -20,6 +20,7 @@ export class DeviceService {
     return new Promise<ActionStatus<YLanguageCode>>((resolve,reject)=>{
       Device.getLanguageCode()
       .then((value:GetLanguageCodeResult)=>{
+        console.log("Valuue Language Code ",value)
         switch(value.value)
         {
           case YLanguageCode.EN:

@@ -4,8 +4,8 @@ import { YEntityID } from "./yentityid";
 
 export class YEntity
 {
-    id:YEntityID=new YEntityID();
-    createdDate:String=(new Date()).toISOString();
+    id:YEntityID=new YEntityID();          
+    createdDate=(new Date()).getTime();
 
     hydrate(entity: Record<string | number,any>):void
     {

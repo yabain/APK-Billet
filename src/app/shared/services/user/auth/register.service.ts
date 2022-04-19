@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { YUser } from 'src/app/shared/entities/users';
 import { ActionStatus } from 'src/app/shared/utils';
-import { EventService } from 'src/app/shared/utils/services/events/event.service';
+import { FirebaseError } from 'src/app/shared/utils/services/firebase';
 import { YUserStoreService } from '../../store/yuser/yuser-store.service';
 import { UserPreferenceService } from '../user-preference/user-preference.service';
 import { UserProfilService } from '../user-profil/user-profil.service';
@@ -14,7 +14,7 @@ export class RegisterService {
 
   constructor(
     private authService:AuthService,
-    private eventService:EventService,
+    // private eventService:EventService,
     private usersStoreService:YUserStoreService,
     private userProfile:UserProfilService,
     private userPreference:UserPreferenceService
@@ -33,7 +33,7 @@ export class RegisterService {
       })
       .then((result)=>resolve(result))
       .catch((error)=>{
-        this.authService.firebaseApi.handleApiError(error);
+        FirebaseError.handleApiError(error);
         reject(error)
       })
     })
