@@ -4,7 +4,8 @@ import { YEntityID } from "../yentityid";
 
 export class YNotification extends YEntity
 {
-    userID:YEntityID=new YEntityID();
+    senderID:YEntityID=new YEntityID();
+    receiverID:YEntityID=new YEntityID();
     text:String="";
     notifType:YNotificationType=YNotificationType.SIMPLE_NOTIFICATION
 }

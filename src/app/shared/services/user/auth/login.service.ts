@@ -3,9 +3,9 @@ import { AuthService } from './auth.service';
 import { ActionStatus } from '../../../utils';
 import { YUser } from '../../../entities/users';
 import { YEntityID } from '../../../entities';
-import { UserProfilService } from '../user-profil/user-profil.service';
 import { UserPreferenceService } from '../user-preference/user-preference.service';
 import { EventEmitterService } from 'src/app/shared/utils/services/event-emitter/event-emitter.service';
+import { YUserProfilService } from '../user-profil/yuser-profil.service';
 
 
 @Injectable({
@@ -15,7 +15,7 @@ export class LoginService {
 
   constructor(
     private authService:AuthService,
-    private userProfil:UserProfilService,
+    private userProfil:YUserProfilService,
     private userPreferenceService:UserPreferenceService,
     private eventService:EventEmitterService,
   ) { }

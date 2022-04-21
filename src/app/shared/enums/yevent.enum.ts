@@ -1,7 +1,9 @@
 export enum YEventState
 {
     DRAFT_STATE="draft_state",
-    COMPLETE_STATE="complete_state"
+    SUBMITED_DRAFT="submited_draft",
+    ACCEPTED_STATE="complete_state",
+    REJECTED_STATE="rejected_state"
 }
 
 export enum YEventPlateState

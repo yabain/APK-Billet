@@ -6,7 +6,7 @@ import { ActionStatus } from 'src/app/shared/utils';
 import { DbBranchUser } from 'src/app/shared/utils/builders/db-branch';
 import { DeviceService } from 'src/app/shared/utils/services/device/device.service';
 import { FirebaseDataBaseApi, FirebaseError } from 'src/app/shared/utils/services/firebase';
-import { UserProfilService } from '../user-profil/user-profil.service';
+import { YUserProfilService } from '../user-profil/yuser-profil.service';
 
 
 @Injectable({
@@ -20,7 +20,7 @@ export class UserPreferenceService {
   private deviceDictMoney="yabi-pref-money";
   constructor(
     private firebaseApi:FirebaseDataBaseApi,
-    private userProfileService:UserProfilService,
+    private userProfileService:YUserProfilService,
     private deviceService:DeviceService,
     private devicePreferences:typeof AppPreferences
   ) { }

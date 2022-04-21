@@ -11,7 +11,7 @@ import { YUserStoreService } from '../../store/yuser/yuser-store.service';
 @Injectable({
   providedIn: 'root'
 })
-export class UserProfilService {
+export class YUserProfilService {
   currentUser: BehaviorSubject<YUser> = new BehaviorSubject<YUser>(new YUser());
 
   constructor(

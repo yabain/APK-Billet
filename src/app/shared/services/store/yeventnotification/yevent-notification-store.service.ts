@@ -42,4 +42,9 @@ export class YEventNotificationStoreService extends YAbstractEntityStoreService<
   getNotificationById(notificationID: YEntityID):Promise<ActionStatus<YNotification>> {
     return this.findByID(notificationID,DbBranchNotification.getBranchOfNotification(notificationID))
   }
+
+  deleteNotification(notification:YNotification):Promise<ActionStatus<void>> {
+    return this.delete(notification,DbBranchNotification.getBranchOfNotification(notification.id))
+  }
+
 }

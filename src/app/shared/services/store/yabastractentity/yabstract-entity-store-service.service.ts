@@ -39,7 +39,7 @@ export abstract class YAbstractEntityStoreService<T extends YEntity> {
     this.setstore(this.store);
   }
 
-  save(object:T,branch:String):Promise<ActionStatus<void>>
+  protected save(object:T,branch:String):Promise<ActionStatus<void>>
   {
     return new Promise<ActionStatus<void>>((resolve, reject) => {
         if (this.store.has(object.id.toString())) { return resolve(new ActionStatus()); }
@@ -55,7 +55,7 @@ export abstract class YAbstractEntityStoreService<T extends YEntity> {
     });
   }
 
-  update(obj:T,branch): Promise<ActionStatus<T>> {
+  protected update(obj:T,branch): Promise<ActionStatus<T>> {
     return new Promise<ActionStatus<T>>((resolve,reject)=>{
       this.updateAttibute(obj.toString(),branch)
       .then((value)=>{
@@ -66,7 +66,7 @@ export abstract class YAbstractEntityStoreService<T extends YEntity> {
     })
   }
 
-  updateAttibute(value,branch):Promise<ActionStatus<T>> {
+  protected updateAttibute(value,branch):Promise<ActionStatus<T>> {
     return new Promise<ActionStatus<T>>((resolve, reject) => {
       this.firebaseApi.update(branch, value)
         .then((result: ActionStatus<T>) => {              
@@ -77,8 +77,8 @@ export abstract class YAbstractEntityStoreService<T extends YEntity> {
           reject(error);
         });
     });
-}
-  delete(obj:T,branch): Promise<ActionStatus<T>> {
+  }
+  protected delete(obj:T,branch): Promise<ActionStatus<T>> {
       return new Promise<ActionStatus<T>>((resolve, reject) => {
         this.firebaseApi.delete(branch)
           .then((result: ActionStatus<T>) => {
@@ -92,7 +92,7 @@ export abstract class YAbstractEntityStoreService<T extends YEntity> {
       });
   }
 
-  findByID(objID: YEntityID,branch:String): Promise<ActionStatus<T>> {
+  protected findByID(objID: YEntityID,branch:String): Promise<ActionStatus<T>> {
     return new Promise<ActionStatus<T>>((resolve, reject) => {
       let result: ActionStatus<T> = new ActionStatus<T>();
 
@@ -126,7 +126,7 @@ export abstract class YAbstractEntityStoreService<T extends YEntity> {
 
   abstract createInstance(entity:Record<string,any>):T;
 
-  findAll(branch:String):Promise<ActionStatus<T[]>>
+  protected findAll(branch:String):Promise<ActionStatus<T[]>>
   {
     return new Promise<ActionStatus<T>>((resolve,reject)=>{
       this.firebaseApi.fetchOnce(branch.toString())
@@ -144,7 +144,7 @@ export abstract class YAbstractEntityStoreService<T extends YEntity> {
     })
   }
 
-  findByKey(key:String,value:String,branch):Promise<ActionStatus<T[]>>
+  protected findByKey(key:String,value:String,branch):Promise<ActionStatus<T[]>>
   {
     return new Promise<ActionStatus<T[]>>((resolve,reject)=>{
       this.firebaseApi.getFirebaseApp()

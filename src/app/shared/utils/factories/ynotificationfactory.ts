@@ -1,4 +1,5 @@
 import { YEventInvitation, YNotification } from "../../entities/notifications";
+import { YEventUpdateStateNotification } from "../../entities/notifications/yeventupdatestatenotification";
 import { YNotificationType } from "../../enums";
 
 export class YNotificationFactory
@@ -12,6 +13,8 @@ export class YNotificationFactory
 
             case YNotificationType.EVENT_INVITATION_NOTIFICATION:
                 return new YEventInvitation();
+            case YNotificationType.EVENT_UPDATE_STATE_NOTIFICATION:
+                return new YEventUpdateStateNotification()
         }
 
         return null;

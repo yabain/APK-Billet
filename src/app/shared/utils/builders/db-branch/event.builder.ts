@@ -36,3 +36,12 @@ export function getBranchOfEventOrganizer(eventID:YEntityID,organizeID:YEntityID
     return `${getBranchOfEventOrganizers(eventID)}/${organizeID.toString()}`
 }
 
+export function getBranchOfEventArtists(eventID:YEntityID):string
+{
+    return `${getBranchOfEvent(eventID)}/${DbBranch.artistes}`
+}
+
+export function getBranchOfEventArtist(eventID:YEntityID,artisteID:YEntityID):string
+{
+    return `${getBranchOfEventArtists(eventID)}/${artisteID.toString()}`
+}

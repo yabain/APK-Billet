@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { YEntityID } from 'src/app/shared/entities';
 import { YEvent } from 'src/app/shared/entities/events/yevent';
+import { YEventState } from 'src/app/shared/enums';
 import { ActionStatus } from 'src/app/shared/utils';
 import { DbBranchEvent } from 'src/app/shared/utils/builders/db-branch';
 import { FirebaseDataBaseApi } from 'src/app/shared/utils/services/firebase';
@@ -41,4 +42,24 @@ export class YEventStoreService extends YAbstractEntityStoreService<YEvent> {
   getEventById(eventID: YEntityID):Promise<ActionStatus<YEvent>> {
     return this.findByID(eventID,DbBranchEvent.getBranchOfEvent(eventID))
   }
+
+  addArtistToEvent(eventID:YEntityID,artisteID:YEntityID)
+  {
+    let o:any={};
+    o[eventID.toString().toString()]=true;
+    return this.updateAttibute(o,DbBranchEvent.getBranchOfEventArtist(eventID,artisteID))
+  }
+
+  changeEventStatus(eventID:YEntityID,status:YEventState):Promise<ActionStatus<void>>
+  {
+    return new Promise<ActionStatus<void>>((resolve,reject)=>{
+      this.updateAttibute(status,`${DbBranchEvent.getBranchOfEventDetail(eventID)}/state`)
+      .then((result)=>{
+        this.store.get(eventID).state=status;
+        resolve(result)
+      })
+      .catch((error)=>reject(error))
+    })
+  }
+  
 }
