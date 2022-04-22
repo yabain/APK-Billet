@@ -1,7 +1,10 @@
 export enum DbBranch
 {
-    users="users",
+    users_profil="users_profil",
+    users_preference="users_preference",
+    users_organizers="users_organizers",
     notifications="notifications",
+    
     profil="profil",
     preference="preference",
     billets="billets",

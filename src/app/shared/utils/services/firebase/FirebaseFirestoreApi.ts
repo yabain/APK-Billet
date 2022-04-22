@@ -13,30 +13,32 @@ export class FirebaseFireStoreApi extends AbstractFirebase{
     this.db = firebase.firestore();
   }
  
+  private getUrlSegments(url:String)
+  {
+    if(url.indexOf("/")>=0) 
+    {
+      return [url.substring(0,url.lastIndexOf("/")),url.substring(url.lastIndexOf("/")+1)]
+    }
+    else return [url]
+  }
+  private getRequest(url:String)
+  {
+    let urlSegment=this.getUrlSegments(url);
+    let req = this.db.collection(urlSegment[0]);
+    if(urlSegment.length>1) req=req.doc(urlSegment[1]);
+    else req=req.doc();
+    return req;
+  }
 
   add(url: string, value: any): Promise<ActionStatus<any>> {
-    let action = new ActionStatus<any>();
-    return new Promise((resolve, reject) => {
-      //   this.db.ref(url).push().set(value).then((doc) => {
-      //     action.description = 'successful add new collection';
-      //     resolve(action);
-      //   }).catch((err) => {
-      //     // Bugsnag.notify(err)
-      //     action.apiCode = err.code;
-      //     action.code = ActionStatus.UNKNOW_ERROR;
-      //     action.message = 'error';
-      //     action.description = '' + err;
-      //     reject(action);
-      //   });
-
-
-    });
+    return this.set(url,value);
   }
 
   set(url: string, value: any): Promise<ActionStatus<any>> {
     let action = new ActionStatus<any>();
     return new Promise<ActionStatus<any>>((resolve, reject) => {
-      this.db.ref(url).set(value).then(() => {
+      
+      this.getRequest(url).set(value).then(() => {
         action.message = 'success';
         action.description = 'successful set new collection';
         resolve(action);
@@ -54,21 +56,19 @@ export class FirebaseFireStoreApi extends AbstractFirebase{
   fetchOnce(url: string): Promise<ActionStatus<any>> {
     let action = new ActionStatus<any>();
     return new Promise((resolve, reject) => {
-      this.db.ref(url).once('value')
+      this.getRequest(url).get()
         .then((doc) => {
-          try {
-            action.result = doc.val();
-            action.description = 'Successful fetching information';
-            resolve(action);
-          }
-          catch (err) {
-            // Bugsnag.notify(err)
-            action.apiCode = err.code;
-            action.code = ActionStatus.UNKNOW_ERROR;
-            action.message = 'error';
-            action.description = `${err}`;
-            reject(action);
-          }
+          action.result = doc.data();
+          action.description = 'Successful fetching information';
+          resolve(action);         
+        })
+        .catch ((err)=> {
+          // Bugsnag.notify(err)
+          action.apiCode = err.code;
+          action.code = ActionStatus.UNKNOW_ERROR;
+          action.message = 'error';
+          action.description = `${err}`;
+          reject(action);
         });
     });
   }
@@ -77,18 +77,13 @@ export class FirebaseFireStoreApi extends AbstractFirebase{
   fetch(url: string): Promise<ActionStatus<any>> {
     let action = new ActionStatus<any>();
     return new Promise<ActionStatus<any>>((resolve, reject) => {
-      this.db.ref(url).on('value', (doc) => {
+      this.getRequest(url).onSnapshot((doc) => {
         try {
-          // let r=[];
-          // doc.forEach(element => {
-          //   r.push(element.val());
-          // });
           action.description = 'Successful fetching information';
-          action.result = doc.val();
+          action.result = doc.data();
           resolve(action);
         }
         catch (err) {
-          // Bugsnag.notify(err)
           action.apiCode = err.code;
           action.code = ActionStatus.UNKNOW_ERROR;
           action.message = 'error';
@@ -99,47 +94,27 @@ export class FirebaseFireStoreApi extends AbstractFirebase{
     });
   }
 
-  updates(updates: { link: String, data: any }[]): Promise<ActionStatus<any>> {
-    return new Promise<ActionStatus<any>>((resolve, reject) => {
-      let up = {};
-      let result = new ActionStatus<any>();
-      updates.forEach((update) => up[update.link.toString()] = update.data);
-      this.db.ref().update(up, (error) => {
-        if (error) {
-          // Bugsnag.notify(error)
-          result.apiCode = error.error;
-          result.message = error.message;
-          return reject(result);
-        }
-        resolve(result);
-      })
-    });
-  }
-  update(branch: any, arg1: Record<string | number, any>): Promise<ActionStatus<any>> {
-    return this.updates([
-      {
-        link: branch,
-        data: arg1
-      }
-    ])
+  update(url: any, value: Record<string | number, any>): Promise<ActionStatus<any>> {
+    return this.set(url,value)
   }
 
   delete(url: string): Promise<ActionStatus<any>> {
     let action = new ActionStatus<any>();
     return new Promise<ActionStatus<any>>((resolve, reject) => {
-      try {
-        this.db.ref(url).remove();
+      this.getRequest(url).delete()
+      .then((result)=> {
+        
         action.description = 'Successful deleting information';
         resolve(action);
-      }
-      catch (err) {
+      }).
+      catch ((err)=>{
         // Bugsnag.notify(err)
         action.apiCode = err.code;
         action.code = ActionStatus.UNKNOW_ERROR;
         action.message = 'error';
         action.description = `${err}`;
         reject(action);
-      }
+      })
     });
 
   }

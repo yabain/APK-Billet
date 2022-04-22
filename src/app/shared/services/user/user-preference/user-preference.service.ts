@@ -18,11 +18,11 @@ export class UserPreferenceService {
   private deviceDict="yabi-dict-preferences";
   private deviceDictLang="yabi-pref-lang";
   private deviceDictMoney="yabi-pref-money";
+  private devicePreferences =  AppPreferences;
   constructor(
     private firebaseApi:FirebaseDataBaseApi,
     private userProfileService:YUserProfilService,
-    private deviceService:DeviceService,
-    private devicePreferences:typeof AppPreferences
+    private deviceService:DeviceService
   ) { }
   
   //set preference to objet and emmit to app
@@ -36,7 +36,7 @@ export class UserPreferenceService {
   downloadPreferences():Promise<ActionStatus<void>>
   {
     return new Promise<ActionStatus<void>>((resolve,reject)=>{
-       this.firebaseApi.fetch(DbBranchUser.getBranchOfPreferenceUser(this.userProfileService.currentUser.getValue().id))
+       this.firebaseApi.fetch(DbBranchUser.getBranchOfUserPreference(this.userProfileService.currentUser.getValue().id))
        .then((value)=>{
           this.setPreferences(value.result.langCode,value.result.moneyCode) 
           return this.setPreferencesToDevice(value.result.langCode,value.result.moneyCode);
@@ -74,7 +74,7 @@ export class UserPreferenceService {
   {
     return new Promise<ActionStatus<void>>((resolve,reject)=>{
       this.firebaseApi.set(
-        DbBranchUser.getBranchOfPreferenceUser(this.userProfileService.currentUser.getValue().id),
+        DbBranchUser.getBranchOfUserPreference(this.userProfileService.currentUser.getValue().id),
         {
           moneyCode:this.moneyCode,
           langCode:this.langCode

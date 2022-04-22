@@ -11,7 +11,7 @@ import { Globalization } from '@awesome-cordova-plugins/globalization/ngx';
 export class DeviceService {
 
   constructor(
-    private globalization:Globalization
+    
   ) { }
   
   getLanguageCode():Promise<ActionStatus<YLanguageCode>>

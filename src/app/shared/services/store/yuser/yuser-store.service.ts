@@ -5,7 +5,6 @@ import { ActionStatus } from 'src/app/shared/utils';
 import { DbBranchUser } from 'src/app/shared/utils/builders/db-branch';
 import { YUserFactory } from 'src/app/shared/utils/factories';
 import { FirebaseDataBaseApi, FirebaseError } from 'src/app/shared/utils/services/firebase';
-import { AuthService } from '../../user/auth/auth.service';
 import { YAbstractEntityStoreService } from '../yabastractentity/yabstract-entity-store-service.service';
 
 
@@ -17,7 +16,6 @@ export class YUserStoreService extends YAbstractEntityStoreService<YUser> {
   
   constructor(
     firebaseApi:FirebaseDataBaseApi,
-    private authService:AuthService
     ) {
     super(firebaseApi)
   }
@@ -33,20 +31,20 @@ export class YUserStoreService extends YAbstractEntityStoreService<YUser> {
 
   getAllUser():Promise<ActionStatus<YUser>>
   {
-    return this.findAll(DbBranchUser.getBranchOfUsers())
+    return this.findAll(DbBranchUser.getBranchOfUsersProfil())
   }
 
   findUsersByKey(key:String,value:String):Promise<ActionStatus<YUser[]>>
   {
-    return this.findByKey(key,value,DbBranchUser.getBranchOfUsers())
+    return this.findByKey(key,value,DbBranchUser.getBranchOfUsersProfil())
   }
 
   updateUser(user: YUser):  Promise<ActionStatus<YUser>> {
-    return this.update(user,DbBranchUser.getBranchOfUser(user.id))
+    return this.update(user,DbBranchUser.getBranchOfUserProfil(user.id))
   }
 
   getUserById(userID: YEntityID):Promise<ActionStatus<YUser>> {
-    return this.findByID(userID,DbBranchUser.getBranchOfUser(userID))
+    return this.findByID(userID,DbBranchUser.getBranchOfUserProfil(userID))
   }
 
   createNewAccount(user:YUser):Promise<ActionStatus<void>>

@@ -92,4 +92,17 @@ export class CreateEventService {
       return this.eventNotificationService.addNotification(notification)
     })
   }
+
+  rejectEventOrgaiser(eventID:YEntityID,reason:String):Promise<ActionStatus<void>>
+  {
+    return this.eventStoreService.changeEventStatus(eventID,YEventState.REJECTED_STATE)
+    .then((result)=>{
+      let notification:YEventUpdateStateNotification=new YEventUpdateStateNotification();
+      notification.eventID.setId(eventID.toString());
+      notification.senderID.setId(YCONSTANTE.DEFAULT_ADMIN_ID)
+      notification.receiverID.setId(this.userProfilService.currentUser.getValue().id.toString());
+      notification.text=reason;
+      return this.eventNotificationService.addNotification(notification)
+    })
+  }
 }

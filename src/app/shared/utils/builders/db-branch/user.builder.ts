@@ -1,48 +1,34 @@
 import { YEntityID } from "src/app/shared/entities";
 import { DbBranch } from "./db-branch.enum";
 
-export function getBranchOfUsers():string
-{
-    return `${DbBranch.users}`
-}
 
-export function getBranchOfUser(userID:YEntityID):string
+export function getBranchOfUsersProfil():string
 {
-    return `${getBranchOfUsers()}/${userID.toString()}`;
+    return `${DbBranch.users_profil}`;
 }
 
 export function getBranchOfUserProfil(userID:YEntityID):string
 {
-    return `${getBranchOfUser(userID)}/${DbBranch.profil}`
+    return `${getBranchOfUsersProfil()}/${userID.toString()}`
 }
 
-export function getBranchOfPreferenceUser(userID:YEntityID):string
+export function getBranchOfUsersPreference():string
 {
-    return `${getBranchOfUser(userID)}/${DbBranch.preference}`
+    return `${DbBranch.users_preference}`
+}
+
+export function getBranchOfUserPreference(userID:YEntityID):string
+{
+    return `${getBranchOfUsersPreference()}/${userID.toString()}`
 }
 
 export function getBranchOfUserEventsOrganize(userID:YEntityID):string
 {
-    return `${getBranchOfUser(userID)}/${DbBranch.organize}`
+    return `${DbBranch.users_organizers}/${userID.toString()}`
 }
 
-export function getBranchOfUserNotifications(userID:YEntityID):string
+export function getBranchOfNotifications(userID:YEntityID):string
 {
-    return `${getBranchOfUser(userID)}/${DbBranch.notifications}`
+    return `${DbBranch.notifications}`
 }
 
-export function getBranchOfSendUserNotifications(userID:YEntityID):string
-{
-    return `${getBranchOfUserNotifications(userID)}/${DbBranch.send_notification}`
-}
-
-export function getBranchOfReceiveUserNotification(userID:YEntityID)
-{
-    return  `${getBranchOfUserNotifications(userID)}/${DbBranch.receive_notification}`
-}
-
-
-export function getBranchOfBilletsUser(userID:YEntityID):string
-{
-    return `${getBranchOfUser(userID)}/${DbBranch.billets}`
-}
