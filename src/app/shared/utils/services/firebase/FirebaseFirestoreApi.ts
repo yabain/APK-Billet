@@ -21,7 +21,7 @@ export class FirebaseFireStoreApi extends AbstractFirebase{
     }
     else return [url]
   }
-  private getRequest(url:String)
+  getRequest(url:String)
   {
     let urlSegment=this.getUrlSegments(url);
     let req = this.db.collection(urlSegment[0]);

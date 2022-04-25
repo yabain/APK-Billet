@@ -123,6 +123,7 @@ export abstract class YAbstractEntityStoreService<T extends YEntity> {
     obj.hydrate(entity);
     return obj
   }
+  
 
   abstract createInstance(entity:Record<string,any>):T;
 
@@ -132,12 +133,7 @@ export abstract class YAbstractEntityStoreService<T extends YEntity> {
       this.firebaseApi.fetchOnce(branch.toString())
       .then((result:ActionStatus<T>)=>{
         let data=result.result;
-        for(let key in data)
-        {
-          let obj = this.hydrateObjet(data[key])
-          this.store.set(obj.id.toString(),obj);
-        }
-        this.setstore(this.store)
+        this.hydrateObjectFromList(result.result);
         resolve(new ActionStatus())
       })
       .catch((error)=>reject(error))
@@ -147,24 +143,17 @@ export abstract class YAbstractEntityStoreService<T extends YEntity> {
   protected findByKey(key:String,value:String,branch):Promise<ActionStatus<T[]>>
   {
     return new Promise<ActionStatus<T[]>>((resolve,reject)=>{
-      this.firebaseApi.getFirebaseApp()
-      .ref(branch)
-      .orderByChild(key)
-      .equalTo(value)
-      .once("value",(result)=>{
-        let data=result.val();
-        let objs:T[]=[];
-        for(let key in data)
-        {
-          let inst:T=this.hydrateObjet(data[key])
-          // this.storeUser.set(key,user);
-          objs.push(inst);
-        }
-        let actionResult=new ActionStatus();
-        actionResult.result=objs;
-        resolve(actionResult);
-      })
+
     })
+  }
+  hydrateObjectFromList(objs:Record<string,any>[])
+  {
+    for(const data of objs)
+    {
+      let obj = this.hydrateObjet(data);
+      this.store.set(obj.id.toString(),obj);
+    }
+    this.setstore(this.store)
   }
 
   findObjectLocalByKey(key:String,value:String):T[]

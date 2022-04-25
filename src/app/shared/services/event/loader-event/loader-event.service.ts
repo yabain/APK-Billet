@@ -2,11 +2,13 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { filter, mergeMap } from "rxjs/operators";
 import { YEvent } from 'src/app/shared/entities/events/yevent';
-import { YEventSubType, YEventType } from 'src/app/shared/enums';
+import { YEventState, YEventSubType, YEventType } from 'src/app/shared/enums';
+import { ActionStatus } from 'src/app/shared/utils';
 import { DbBranchEvent } from 'src/app/shared/utils/builders/db-branch';
 import { YEnumUtil } from 'src/app/shared/utils/helpers';
 import { EventEmitterService, EventEmitterType } from 'src/app/shared/utils/services/event-emitter/event-emitter.service';
-import { FirebaseDataBaseApi } from 'src/app/shared/utils/services/firebase';
+import { FirebaseDataBaseApi, FirebaseError } from 'src/app/shared/utils/services/firebase';
+import { FirebaseFirestoreCursor } from 'src/app/shared/utils/services/firebase/firebasefirestore-cursor';
 import { YEventStoreService } from '../../store/yevent/yevent-store.service';
 
 @Injectable({
@@ -14,7 +16,7 @@ import { YEventStoreService } from '../../store/yevent/yevent-store.service';
 })
 export class LoaderEventService {
   eventStore:Map<string, BehaviorSubject<Map<String,YEvent>>>=new Map();
-  // categoriesQueryBuilder:Map<String,FirebaseCursor>= new Map();
+  categoriesQueryBuilder:Map<String,FirebaseFirestoreCursor>= new Map();
   constructor(
     private eventStoreService:YEventStoreService,
     private eventEmitterService:EventEmitterService,
@@ -27,22 +29,62 @@ export class LoaderEventService {
     this.eventEmitterService.subscribeToEvent(EventEmitterType.LOGGIN)
     .subscribe((isLoggin)=>{
       if(isLoggin) this.loaderInitEvent();
-    })
-    YEnumUtil.getListOfValue(YEventType).forEach((value)=>{
+    })    
+  }
 
-      // let fcursor=new FirebaseCursor(
-      //   this.firebaseApi.getFirebaseApp()
-      //   .ref(DbBranchEvent.getBranchOfEvents()),
-      //   10,
-      //   "createdDate"
-      //   )
+  loaderInitEvent()
+  {
+    return new Promise<ActionStatus<void>>((resolve,reject)=>{
+      Promise.all(
+        YEnumUtil.getListOfValue(YEventType).map((value:String)=>{   
+        let fcursor=new FirebaseFirestoreCursor(
+          this.firebaseApi.getFirebaseApp()
+          .collection(DbBranchEvent.getBranchOfEvents())
+          .where("type","==",value)
+          .where("state","==",YEventState.ACCEPTED_STATE),
+          10,
+          "createdDate"
+        );   
+        this.categoriesQueryBuilder.set(
+          value,
+          fcursor
+        );  
+        return this.loadNextBunchData(value);  
+      }))
+      .then((result:ActionStatus<void>[])=>{
+        resolve(new ActionStatus())
+      })
+      .catch((error)=>{
+        reject(error)
+      })
     })
   }
-  private loaderInitEvent() 
+
+  loadNextBunchData(type:String):Promise<ActionStatus<void>>
   {
+    return new Promise<ActionStatus<void>>((resolve,reject)=>{
+      if(this.categoriesQueryBuilder.has(type))
+      {
+        this.categoriesQueryBuilder.get(type)
+        .next()
+        .then((result:ActionStatus<any>)=>{
+          this.eventStoreService.hydrateObjectFromList(result.result)
+          resolve(new ActionStatus())
+        })
+        .catch((error)=>{
+          FirebaseError.handleApiError(error);
+          reject(error);
+        })
+      }
+      else
+      {
+        let result:ActionStatus<boolean>=new ActionStatus();
+        result.code=ActionStatus.INVALID_ARGUMENT_ERROR;
+        reject(result);
+      }
+    })
     
   }
-
   dispatchEvent(mapStore:Map<string,YEvent>)
   {
     for (const event of Array.from(mapStore.values()))
@@ -61,6 +103,7 @@ export class LoaderEventService {
       }
     }
   }
+
   private getSubscriptionByType(type:YEventType)
   {
     if(this.eventStore.has(type)) return this.eventStore.get(type)
