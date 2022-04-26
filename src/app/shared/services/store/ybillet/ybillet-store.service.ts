@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { YEntityID } from 'src/app/shared/entities';
 import { YBillet } from 'src/app/shared/entities/billets/ybillet';
+import { YBuyBilletState } from 'src/app/shared/enums';
 import { ActionStatus } from 'src/app/shared/utils';
 import { DbBranchBillet } from 'src/app/shared/utils/builders/db-branch';
 import { FirebaseDataBaseApi } from 'src/app/shared/utils/services/firebase';
@@ -41,6 +42,11 @@ export class YBilletStoreService extends YAbstractEntityStoreService<YBillet> {
 
   getBilletById(billetID: YEntityID):Promise<ActionStatus<YBillet>> {
     return this.findByID(billetID,DbBranchBillet.getBranchOfBillet(billetID))
+  }
+
+  updateBilletState(obj,billetID:YEntityID):Promise<ActionStatus<YBillet>>
+  {
+    return this.updateAttibute(obj,DbBranchBillet.getBranchOfBillet(billetID))
   }
 
 }

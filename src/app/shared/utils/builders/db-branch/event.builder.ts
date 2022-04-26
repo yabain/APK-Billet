@@ -18,7 +18,7 @@ export function getBranchOfEventDetail(entityID:YEntityID):string
 
 export function getBranchOfBilletsEvent(entityID:YEntityID):string
 {
-    return `${getBranchOfEvent(entityID)}/${DbBranch.billets}`
+    return `${getBranchOfEvent(entityID)}/${DbBranch.event_billets}`
 }
 
 export function getBranchOfBilletEvent(eventID:YEntityID,billetID:YEntityID):string

@@ -1,5 +1,4 @@
 import { Injectable, isDevMode } from '@angular/core';
-import firebase from 'firebase';
 import 'firebase/firestore';
 import { ActionStatus } from '../../actionstatus';
 import { AbstractFirebase } from './abtrasct-firebase';
@@ -14,7 +13,7 @@ export class FirebaseDataBaseApi extends AbstractFirebase{
   
   constructor() {
     super()
-    this.db = firebase.firestore();
+    this.db = this.firebase.firestore();
   }  
 
 
@@ -163,7 +162,7 @@ export class FirebaseDataBaseApi extends AbstractFirebase{
   }
 
   handleConnexionState(callBack: ({ connected: boolean }) => void) {
-    // firebase.database().ref('.info/connected').on('value', (snap) => {
+    // this.firebase.database().ref('.info/connected').on('value', (snap) => {
     //   if (snap.val() === true) { callBack({ connected: true }); }
     //   else { callBack({ connected: false }); }
     // })

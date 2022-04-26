@@ -7,13 +7,10 @@ import { FormGroup } from '@angular/forms';
   styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent implements OnInit {
-  form:FormGroup;
+
   constructor() { }
 
   ngOnInit() {
-    this.form=new FormGroup({
-      
-    })
   }
 
 }

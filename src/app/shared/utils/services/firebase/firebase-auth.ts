@@ -1,6 +1,5 @@
 import { ActionStatus } from "../../actionstatus";
 import { AbstractFirebase } from "./abtrasct-firebase";
-import firebase from 'firebase';
 import "firebase/auth"
 
 export class FireBaseAuth extends AbstractFirebase
@@ -8,7 +7,7 @@ export class FireBaseAuth extends AbstractFirebase
     signInApi(email: string, password: string): Promise<ActionStatus<any>> {
         let result: ActionStatus<any> = new ActionStatus<any>();
         return new Promise(async (resolve, reject) => {
-          firebase.auth().signInWithEmailAndPassword(email, password)
+          this.firebase.auth().signInWithEmailAndPassword(email, password)
             .then((userCredential) => {
               result.description = 'Authentification successful';
               result.result = userCredential;
@@ -28,21 +27,21 @@ export class FireBaseAuth extends AbstractFirebase
     }
 
     signOutApi() {
-        firebase.auth().signOut();
+        this.firebase.auth().signOut();
     }
 
     get user() {
-        return firebase.auth().currentUser;
+        return this.firebase.auth().currentUser;
     }
 
     auth() {
-        return firebase.auth();
+        return this.firebase.auth();
     }
 
     createUserApi(email: string, password: string): Promise<ActionStatus<any>> {
         let result: ActionStatus<any> = new ActionStatus<any>();
         return new Promise(async (resolve, reject) => {
-          firebase.auth().createUserWithEmailAndPassword(email, password)
+          this.firebase.auth().createUserWithEmailAndPassword(email, password)
             .then((userCredential) => {
               result.description = 'Account was created successful';
               result.result = userCredential.user;

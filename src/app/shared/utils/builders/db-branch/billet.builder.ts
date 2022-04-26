@@ -3,7 +3,7 @@ import { DbBranch } from "./db-branch.enum";
 
 export function getBranchOfBillets():string
 {
-    return `${DbBranch.billets}`
+    return `${DbBranch.event_billets}`
 }
 
 export function getBranchOfBillet(billetID:YEntityID):string

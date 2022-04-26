@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import firebase from 'firebase';
 import { BehaviorSubject } from 'rxjs';
 import { YEntityID } from 'src/app/shared/entities';
 import { FireBaseConstant } from './firebase-constant';
@@ -7,13 +6,16 @@ import { FirebaseDataBaseApi } from './FirebaseDatabaseApi';
 import { ActionStatus } from '../../actionstatus';
 import { CustomFile } from '../../entities';
 import { FirebaseError } from './firebast-error';
+import { AbstractFirebase } from './abtrasct-firebase';
+import firebase  from 'firebase';
 
 @Injectable({
   providedIn: 'root'
 })
-export class FirebaseFile {
-  db:any;
-  constructor(private firebaseDatabaseApi:FirebaseDataBaseApi) {
+export class FirebaseFile extends AbstractFirebase {
+
+  constructor() {
+    super();
     this.db=firebase.storage().ref();
    }
   uploadFile(repos:string,file:CustomFile):BehaviorSubject<ActionStatus<any>>
@@ -27,17 +29,17 @@ export class FirebaseFile {
       contentType:file.type
     })
     
-    uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
+    uploadTask.on(this.firebase.storage.TaskEvent.STATE_CHANGED,
       (snapshot)=>
       {
         result.result=Math.trunc((snapshot.bytesTransferred/snapshot.totalBytes) *100);
         switch(snapshot.state)
         {
-          case firebase.storage.TaskState.PAUSED:
+          case this.firebase.storage.TaskState.PAUSED:
             result.apiCode=ActionStatus.UPLOAD_PAUSED;            
             subject.next(result);
             break;
-          case firebase.storage.TaskState.RUNNING:
+          case this.firebase.storage.TaskState.RUNNING:
             result.apiCode=ActionStatus.UPLOAD_RUNNING;
             subject.next(result)
             break;

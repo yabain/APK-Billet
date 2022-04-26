@@ -1,5 +1,6 @@
 export enum YBilletState
 {
+    UN_RESERVED="un_reserved",
     RESERVED="reserved",
     CONFIRMED_UNUSED="confirmed_unused",
     USED="used"

@@ -1,5 +1,4 @@
 import { Injectable, isDevMode } from '@angular/core';
-import firebase from 'firebase';
 import 'firebase/firestore';
 import { ActionStatus } from '../../actionstatus';
 import { AbstractFirebase } from './abtrasct-firebase';
@@ -10,7 +9,7 @@ import { AbstractFirebase } from './abtrasct-firebase';
 export class FirebaseFireStoreApi extends AbstractFirebase{
   constructor() {
     super();
-    this.db = firebase.firestore();
+    this.db = this.firebase.firestore();
   }
  
   private getUrlSegments(url:String)

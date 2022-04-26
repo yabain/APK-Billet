@@ -1,4 +1,4 @@
-import firebase from 'firebase';
+import firebase from 'firebase/app';
 import { Injectable, isDevMode } from '@angular/core';
 import { FirebaseConfig } from './firebase-config';
 
@@ -8,6 +8,7 @@ export abstract class AbstractFirebase
     debug: boolean = false;
     offlineMode: boolean = false;
     db: any;
+    firebase=firebase;
 
     constructor()
     {
@@ -21,10 +22,18 @@ export abstract class AbstractFirebase
         // firebase.analytics();
       
         // Initialize Firebase
-        firebase.initializeApp(this.firebaseConfig);
+        if(!firebase.apps.length)
+        {
+            this.firebase.initializeApp(this.firebaseConfig);
+            this.setDebugMode();
+            this.setModeApp();
+        }
+        else 
+        {
+            this.firebase.app()
+        }
 
-        this.setDebugMode();
-        this.setModeApp();
+        
     }
 
     setDebugMode() {
