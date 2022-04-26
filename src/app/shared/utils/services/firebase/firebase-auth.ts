@@ -1,7 +1,11 @@
+import { Injectable } from "@angular/core";
 import { ActionStatus } from "../../actionstatus";
 import { AbstractFirebase } from "./abtrasct-firebase";
 import "firebase/auth"
 
+@Injectable({
+  providedIn:'root'
+})
 export class FireBaseAuth extends AbstractFirebase
 {
     signInApi(email: string, password: string): Promise<ActionStatus<any>> {

@@ -11,7 +11,9 @@ import { FirebaseDataBaseApi } from '../../../utils/services/firebase/FirebaseDa
 
 
 
-@Injectable()
+@Injectable({
+  providedIn:'root'
+})
 export class AuthService {
 
   isLoggedIn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);

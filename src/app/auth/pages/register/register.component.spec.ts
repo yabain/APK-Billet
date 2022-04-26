@@ -8,19 +8,19 @@ describe('RegisterComponent', () => {
   let component: RegisterComponent;
   let fixture: ComponentFixture<RegisterComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ RegisterComponent ],
-      imports: [
-        IonicModule.forRoot(),
-        RouterModule
-      ]
-    }).compileComponents();
+  // beforeEach(waitForAsync(() => {
+  //   TestBed.configureTestingModule({
+  //     declarations: [ RegisterComponent ],
+  //     imports: [
+  //       IonicModule.forRoot(),
+  //       RouterModule
+  //     ]
+  //   }).compileComponents();
 
-    fixture = TestBed.createComponent(RegisterComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  }));
+  //   fixture = TestBed.createComponent(RegisterComponent);
+  //   component = fixture.componentInstance;
+  //   fixture.detectChanges();
+  // }));
 
   // it('should create', () => {
   //   expect(component).toBeTruthy();
