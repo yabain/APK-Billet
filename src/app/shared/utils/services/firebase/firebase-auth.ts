@@ -8,10 +8,20 @@ import "firebase/auth"
 })
 export class FireBaseAuth extends AbstractFirebase
 {
+  constructor()
+  {
+    super();
+    this.db=this.firebase.auth();
+    this.setUseEmulator();
+  }
+  setUseEmulator()
+  {
+      if(location.hostname === "localhost") this.db.useEmulator("http://localhost:9099")
+  }
     signInApi(email: string, password: string): Promise<ActionStatus<any>> {
         let result: ActionStatus<any> = new ActionStatus<any>();
         return new Promise(async (resolve, reject) => {
-          this.firebase.auth().signInWithEmailAndPassword(email, password)
+          this.db.signInWithEmailAndPassword(email, password)
             .then((userCredential) => {
               result.description = 'Authentification successful';
               result.result = userCredential;
@@ -31,21 +41,21 @@ export class FireBaseAuth extends AbstractFirebase
     }
 
     signOutApi() {
-        this.firebase.auth().signOut();
+        this.db.signOut();
     }
 
     get user() {
-        return this.firebase.auth().currentUser;
+        return this.db.currentUser;
     }
 
     auth() {
-        return this.firebase.auth();
+        return this.db;
     }
 
     createUserApi(email: string, password: string): Promise<ActionStatus<any>> {
         let result: ActionStatus<any> = new ActionStatus<any>();
         return new Promise(async (resolve, reject) => {
-          this.firebase.auth().createUserWithEmailAndPassword(email, password)
+          this.db.createUserWithEmailAndPassword(email, password)
             .then((userCredential) => {
               result.description = 'Account was created successful';
               result.result = userCredential.user;

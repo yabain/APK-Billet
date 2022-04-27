@@ -18,6 +18,10 @@ export class FirebaseFile extends AbstractFirebase {
     super();
     this.db=firebase.storage().ref();
    }
+   setUseEmulator()
+  {
+      if(location.hostname === "localhost") this.db.useEmulator("localhost",9199)
+  }
   uploadFile(repos:string,file:CustomFile):BehaviorSubject<ActionStatus<any>>
   {
     let result:ActionStatus<any>=new ActionStatus<any>();

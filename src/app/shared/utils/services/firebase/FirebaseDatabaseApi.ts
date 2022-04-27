@@ -14,8 +14,12 @@ export class FirebaseDataBaseApi extends AbstractFirebase{
   constructor() {
     super()
     this.db = this.firebase.firestore();
+    this.setUseEmulator();
   }  
-
+  setUseEmulator()
+  {
+      if(location.hostname === "localhost") this.db.useEmulator("localhost",9000)
+  }
 
   add(url: string, value: any): Promise<ActionStatus<any>> {
     let action = new ActionStatus<any>();

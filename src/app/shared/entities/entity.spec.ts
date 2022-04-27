@@ -22,7 +22,7 @@ describe('Test Entities',()=>{
         expect(user.toString().eventsID).toContain("eventid1234")
     })
 
-    it("#hydrate add eventid",()=>{
+    it("#hydrate add eventid should content new event",()=>{
         user.hydrate({
             eventsID:["eventid1234"]
         });

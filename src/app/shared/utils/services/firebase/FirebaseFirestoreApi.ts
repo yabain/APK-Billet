@@ -10,8 +10,12 @@ export class FirebaseFireStoreApi extends AbstractFirebase{
   constructor() {
     super();
     this.db = this.firebase.firestore();
+    this.setUseEmulator();
   }
- 
+  setUseEmulator()
+  {
+      if(location.hostname === "localhost") this.db.useEmulator("localhost",8080)
+  }
   private getUrlSegments(url:String)
   {
     if(url.indexOf("/")>=0) 

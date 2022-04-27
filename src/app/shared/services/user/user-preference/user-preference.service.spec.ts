@@ -1,16 +1,15 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed } from "@angular/core/testing"
+import { YLanguageCode, YMoneyCode } from "src/app/shared/enums";
+import { UserPreferenceService } from "./user-preference.service"
 
-import { UserPreferenceService } from './user-preference.service';
-
-describe('UserPreferenceService', () => {
-  let service: UserPreferenceService;
-
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(UserPreferenceService);
-  });
-
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
-});
+describe('User Preference Service',()=>{
+    let userPreferenceService:UserPreferenceService;
+    beforeEach(()=>{
+        userPreferenceService=TestBed.inject(UserPreferenceService);
+    })
+    
+    it("write user preference to device",async ()=>{
+        let result = userPreferenceService.setPreferencesToDevice(YLanguageCode.FR,YMoneyCode.XAF)
+        await expectAsync(result).toBeResolved();
+    })
+})

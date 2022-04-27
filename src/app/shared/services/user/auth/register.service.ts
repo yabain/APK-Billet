@@ -33,7 +33,7 @@ export class RegisterService {
       })
       .then((result)=>resolve(result))
       .catch((error)=>{
-        FirebaseError.handleApiError(error);
+        // FirebaseError.handleApiError(error);
         reject(error)
       })
     })

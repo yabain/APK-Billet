@@ -109,9 +109,13 @@ export class UserPreferenceService {
     return new Promise<ActionStatus<void>>((resolve,reject)=>{
       this.devicePreferences.store(this.deviceDict,this.deviceDictLang,langCode)
       .then((result)=>{
+        // console.log("langCode ",this.deviceDict,this.deviceDictLang,langCode)
         resolve(new ActionStatus())
       })
-      .catch((error)=>reject(new ActionStatus()))
+      .catch((error)=>{
+        // console.error("Error",error)
+        reject(new ActionStatus())
+      })
     })
     
   }
@@ -127,7 +131,7 @@ export class UserPreferenceService {
     })
   }
 
-  private setPreferencesToDevice(langCode:YLanguageCode,moneyCode:YMoneyCode)
+  setPreferencesToDevice(langCode:YLanguageCode,moneyCode:YMoneyCode)
   {
     return this.setLangToDevice(langCode).then((value)=>this.setMoneyToDevice(moneyCode));
   }

@@ -36,6 +36,11 @@ export abstract class AbstractFirebase
         
     }
 
+    abstract setUseEmulator()
+    // {
+        // if(location.hostname === "localhost") this.db.useEmulator("localhost",8080)
+    // }
+
     setDebugMode() {
     // if(this.debug) firebase.firestore.setLogLevel('debug');
 
