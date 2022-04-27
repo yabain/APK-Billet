@@ -17,7 +17,7 @@ export class YEntity
                 else if(this[key] instanceof Array)
                 {
                     let functionName=`hydrate${YString.capitalize(key)}List`;
-                    if(typeof this[functionName]=="function") this[functionName](entity[key])
+                    if(typeof this[functionName]=="function") Reflect.set(this,key,this[functionName](entity[key])) 
                     else Reflect.set(this,key,entity[key]);
                 }
                 else Reflect.set(this,key,entity[key]);
